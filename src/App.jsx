@@ -4,15 +4,16 @@ import EmployeeDashboard from './componentes/Dashboard/EmployeeDashboard';
 import AdminDashboard from './componentes/Dashboard/AdminDashboard';
 import { setLocalStorage } from './utils/LocalStorage';
 import { useEffect } from 'react';
-import { useState ,} from 'react';
+import { useState } from 'react';
 import { AuthContext } from './context/AuthProvider';
 import { useContext } from 'react';
+// import {loggedInUserData} from './utils/LocalStorage';
 
 
 
 const App = () => {
    const [user,setUser] = useState(null);
-   const [loggedInUser, setLoggedInUser] = useState(null);
+   const [loggedInUserData, setLoggedInUserData] = useState(null);
    const authData = useContext(AuthContext)
    
   //  useEffect(() => {
@@ -26,15 +27,15 @@ const App = () => {
    
 
     const handleLogin = (email,password) => {  
-        if(email == 'admin@me.com' && password == 123){
+        if(email == 'admin@me.com' && password == '123'){
             setUser('admin');
-            localStorage.setItem('loggedInUser', JSON.stringify({ role: 'admin' }));
-           } else if(authData  ){
-            const employees = authData.employees.find((e) => email==e.  email && e.password == password)
-            if(employees)
+            localStorage.setItem('loggedInUser', JSON.stringify({ role:'admin' }));
+           } else if(authData){
+            const employee = authData.employees.find((e) => email==e.email && e.password == password)
+            if(employee)
            { setUser('employee')
-            setLoggedInUser(employees)
-            localStorage.setItem('loggedInUser', JSON.stringify({ role: 'employee' }))
+            setLoggedInUserData(employee)
+            localStorage.setItem('loggedInUser', JSON.stringify({ role:'employee' }))
           }
             }else{
         alert("Invalid credentials");
@@ -46,7 +47,7 @@ const App = () => {
   return (
     <>
    {!user ? <Login handleLogin={handleLogin} />:''}
-   {user == 'admin' ? <AdminDashboard /> : (user == 'employee' ?   <EmployeeDashboard id={loggedInUser.id} /> : null ) }
+   {user == 'admin' ? <AdminDashboard /> : (user == 'employee' ?   <EmployeeDashboard data={loggedInUserData} /> : null ) }
     </>
   );
 }
