@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { use } from 'react';
 import Login from './componentes/Auth/Login';
 import EmployeeDashboard from './componentes/Dashboard/EmployeeDashboard';
 import AdminDashboard from './componentes/Dashboard/AdminDashboard';
@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { AuthContext } from './context/AuthProvider';
 import { useContext } from 'react';
+
 // import {loggedInUserData} from './utils/LocalStorage';
 
 
@@ -16,6 +17,19 @@ const App = () => {
    const [loggedInUserData, setLoggedInUserData] = useState(null);
    const authData = useContext(AuthContext)
    
+    useEffect(() => { 
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if(loggedInUser){
+        const userData = JSON.parse(loggedInUser);
+        setUser (userData.role)
+        setLoggedInUserData(userData.data)
+
+      }
+    },[])
+
+
+
+
   //  useEffect(() => {
   //    if (authData) {
   //      const loggedInUser = localStorage.getItem('loggedInUser');
@@ -35,7 +49,7 @@ const App = () => {
             if(employee)
            { setUser('employee')
             setLoggedInUserData(employee)
-            localStorage.setItem('loggedInUser', JSON.stringify({ role:'employee' }))
+            localStorage.setItem('loggedInUser', JSON.stringify({ role:'employee', data:employee }));
           }
             }else{
         alert("Invalid credentials");
